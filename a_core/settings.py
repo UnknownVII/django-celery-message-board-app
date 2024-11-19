@@ -172,6 +172,9 @@ DEFAULT_FROM_EMAIL = 'Message Board'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 # else:
 #     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-     
+
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True

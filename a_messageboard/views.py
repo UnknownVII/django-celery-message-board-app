@@ -6,7 +6,7 @@ import threading
 from django.contrib.auth.decorators import user_passes_test
 from .models import *
 from .forms import *
-# from .tasks import *
+from .tasks import *
 
 @login_required
 def messageboard_view(request):
@@ -46,21 +46,15 @@ def subscribe(request):
 
 
 def send_email(message):
-    messageboard = message.messageboard 
+    messageboard = message.messageboard
     subscribers = messageboard.subscribers.all()
-    
-    for subscriber in subscribers: 
+
+    for subscriber in subscribers:
         subject = f'New Message from {message.author.profile.name}'
         body = f'{message.author.profile.name}: {message.body}\n\nRegards from\nMy Message Board'
-        
-        # send_email_thread.delay(subject, body, subscriber.email)
-        
-        email_thread = threading.Thread(target=send_email_thread, args=(subject, body, subscriber))
-        email_thread.start()
-
-def send_email_thread(subject, body, subscriber):        
-    email = EmailMessage(subject, body, to=[subscriber.email])
-    email.send()
+        send_email_task.delay(subject, body, subscriber.email)
+        # email_thread = threading.Thread(target=send_email_thread, args=(subject, body, subscriber))
+        # email_thread.start()
 
 def is_staff(user):
     return user.is_staff
