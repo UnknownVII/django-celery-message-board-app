@@ -11,7 +11,14 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
 
+from environ import Env
+
+env = Env()
+Env.read_env()
+
+ENVIRONMENT = env('ENVIRONMENT', default='production')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +27,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rj#-z^kx3j+1ay397otg6j8m_8#v^$^$jys6&41vy^&6le)ezc'
-
+SECRET_KEY=env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if ENVIRONMENT == 'development':
+    DEBUG = True
+else:
+    DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', env('RENDER_EXTERNAL_HOSTNAME')]
 
 CSRF_TRUSTED_ORIGINS = [ 'https://*' ]
 
@@ -46,6 +55,7 @@ INSTALLED_APPS = [
     'django_htmx',
     'a_home',
     'a_users',
+    'a_messageboard'
 ]
 
 SITE_ID = 1
@@ -98,6 +108,10 @@ DATABASES = {
     }
 }
 
+# POSTGRES_LOCALLY = False
+# if ENVIRONMENT == 'production' or POSTGRES_LOCALLY == True:
+#     DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -147,6 +161,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_SIGNUP_REDIRECT_URL = "{% url 'account_signup' %}?next={% url 'profile-onboarding' %}"
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# if ENVIRONMENT == 'production' or POSTGRES_LOCALLY == True:
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = env('EMAIL_ADDRESS')
+EMAIL_HOST_PASSWORD= env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Message Board'
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+# else:
+#     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+     
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
