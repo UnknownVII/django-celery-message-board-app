@@ -10,3 +10,5 @@ celery
 flower
 django-celery-results
 django-celery-beat
+environ
+python-dotenv

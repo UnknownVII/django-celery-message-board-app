@@ -19,3 +19,11 @@ class Message(models.Model):
         
     def __str__(self):
         return self.author.username
+    
+class SentEmailLog(models.Model):
+    recipient = models.EmailField()
+    subject = models.CharField(max_length=255)
+    sent_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.recipient} - {self.subject} - {self.sent_date}"

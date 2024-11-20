@@ -1,3 +1,9 @@
 {
-  "cSpell.words": ["messageboard"]
+  "cSpell.words": [
+    "messageboard",
+    "PYTHONDONTWRITEBYTECODE",
+    "PYTHONUNBUFFERED",
+    "runserver",
+    "venv"
+  ]
 }

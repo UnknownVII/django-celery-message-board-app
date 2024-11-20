@@ -48,11 +48,11 @@ def subscribe(request):
 def send_email(message):
     messageboard = message.messageboard
     subscribers = messageboard.subscribers.all()
-
+    currentUserEmail = message.author.email
     for subscriber in subscribers:
         subject = f'New Message from {message.author.profile.name}'
         body = f'{message.author.profile.name}: {message.body}\n\nRegards from\nMy Message Board'
-        send_email_task.delay(subject, body, subscriber.email)
+        send_email_task.delay(subject, body, subscriber.email, currentUserEmail)
         # email_thread = threading.Thread(target=send_email_thread, args=(subject, body, subscriber))
         # email_thread.start()
 

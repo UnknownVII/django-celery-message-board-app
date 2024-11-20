@@ -5,10 +5,20 @@ from celery import shared_task
 from .models import *
 
 @shared_task(name='email_notification')
-def send_email_task(subject, body, emailAddress):
-    email = EmailMessage(subject, body, to=[emailAddress])
-    email.send()
-    return emailAddress
+def send_email_task(subject, body, emailAddress, currentUserEmail):
+      # Exclude current user and ensure email is not sent twice on the same day
+      if emailAddress == currentUserEmail:
+            return f"Skipped sending email to {emailAddress} (current user)"
+
+      if SentEmailLog.objects.filter(recipient=emailAddress, subject=subject, sent_date=datetime.today()).exists():
+            return f"Email to {emailAddress} with subject '{subject}' already sent today."
+
+      email = EmailMessage(subject, body, to=[emailAddress])
+      email.send()
+
+      # Log the sent email
+      SentEmailLog.objects.create(recipient=emailAddress, subject=subject)
+      return f"Email sent to {emailAddress}"
 
 @shared_task(name='monthly_newsletter')
 def send_newsletter():
