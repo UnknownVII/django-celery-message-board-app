@@ -2,35 +2,114 @@ name: "my-docker-project"
 
 services:
   app:
-    image: my-docker-image
-    container_name: my-docker-container
+    build: .
+    image: my-app-image
+    container_name: my-app-container
+    command: /app/entrypoint.sh
     ports:
-      - "8001:8000"
+      - "8000:8000"
     environment:
       ENVIRONMENT: ${ENVIRONMENT}
       RENDER_EXTERNAL_HOSTNAME: ${RENDER_EXTERNAL_HOSTNAME}
       SECRET_KEY: ${SECRET_KEY}
       EMAIL_ADDRESS: ${EMAIL_ADDRESS}
       EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - .:/app
-    # depends_on:
-    #   - db
-    #   - redis
-#   db:
-#     image: postgres:15
-#     environment:
-#       POSTGRES_USER: postgres
-#       POSTGRES_PASSWORD: example
-#       POSTGRES_DB: mydatabase
-#     volumes:
-#       - db_data:/var/lib/postgresql/data
+    depends_on:
+      - postgres
+      - redis
 
-#   redis:
-#     image: redis:7
-#     command: redis-server
+  postgres:
+    image: postgres
+    container_name: my-postgres-container
+    ports:
+      - "5432:5432"
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT}
+      RENDER_EXTERNAL_HOSTNAME: ${RENDER_EXTERNAL_HOSTNAME}
+      SECRET_KEY: ${SECRET_KEY}
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-# volumes:
-#   static_volume:
-#   media_volume:
-#   db_data:
+  redis:
+    image: "redis:alpine"
+    container_name: my-redis-container
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  celery:
+    image: my-app-image
+    container_name: my-celery-container
+    command: celery -A a_core worker -E -l info
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT}
+      RENDER_EXTERNAL_HOSTNAME: ${RENDER_EXTERNAL_HOSTNAME}
+      SECRET_KEY: ${SECRET_KEY}
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+      - redis
+      - app
+
+  flower:
+    image: my-app-image
+    container_name: my-flower-container
+    command: celery -A a_core flower --basic_auth=${FLOWER_USER}:${FLOWER_PASSWORD}
+    ports:
+      - "5555:5555"
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT}
+      RENDER_EXTERNAL_HOSTNAME: ${RENDER_EXTERNAL_HOSTNAME}
+      SECRET_KEY: ${SECRET_KEY}
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      FLOWER_USER: ${FLOWER_USER}
+      FLOWER_PASSWORD: ${FLOWER_PASSWORD}
+    depends_on:
+      - redis
+  beat:
+    image: my-app-image
+    container_name: my-beat-container
+    command: celery -A a_core beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT}
+      RENDER_EXTERNAL_HOSTNAME: ${RENDER_EXTERNAL_HOSTNAME}
+      SECRET_KEY: ${SECRET_KEY}
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      FLOWER_USER: ${FLOWER_USER}
+      FLOWER_PASSWORD: ${FLOWER_PASSWORD}
+    depends_on:
+      - redis
+      - app
+
+volumes:
+  postgres_data:
+  redis_data:
