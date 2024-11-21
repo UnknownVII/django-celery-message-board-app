@@ -1,16 +1,25 @@
 {
   "cSpell.words": [
     "allauth",
+    "amqp",
+    "asgiref",
+    "dateutil",
+    "didyoumean",
     "dotenv",
     "htmx",
+    "kombu",
     "makemigrations",
     "messageboard",
     "psycopg",
     "pycache",
     "PYTHONDONTWRITEBYTECODE",
     "PYTHONUNBUFFERED",
+    "pytz",
     "runserver",
+    "sqlparse",
+    "tzdata",
     "unbuffered",
-    "venv"
+    "venv",
+    "wcwidth"
   ]
 }
