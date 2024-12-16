@@ -186,3 +186,25 @@ CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_RESULT_BACKEND =  'django-db'
 CELERY_RESULT_EXTENDED = True
+
+# Redis Session Backend
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+# Redis Cache Configuration
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",  # Redis URL (1 is the DB index)
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "KEY_PREFIX": "myapp"
+    }
+}
+
+# Optional: Set Session Cookie Settings
+SESSION_COOKIE_NAME = "sessionid"  # Default cookie name
+SESSION_COOKIE_SECURE = True  # Set to True for HTTPS
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"  # Adjust as needed
