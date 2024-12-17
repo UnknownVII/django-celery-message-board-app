@@ -4,10 +4,10 @@ services:
   app:
     build: .
     image: my-app-image
-    container_name: my-app-container
+    # container_name: my-app-container
     command: /app/entrypoint.sh
     ports:
-      - "8000:8000"
+      - "8000"
     environment:
       ENVIRONMENT: ${ENVIRONMENT}
       RENDER_EXTERNAL_HOSTNAME: ${RENDER_EXTERNAL_HOSTNAME}
@@ -89,6 +89,7 @@ services:
       FLOWER_PASSWORD: ${FLOWER_PASSWORD}
     depends_on:
       - redis
+
   beat:
     image: my-app-image
     container_name: my-beat-container
@@ -109,6 +110,23 @@ services:
     depends_on:
       - redis
       - app
+  
+  kong:
+    image: kong:latest
+    container_name: kong
+    ports:
+      - "8445:8443" # Public API traffic (SSL)
+    environment:
+      KONG_DATABASE: "off"
+      KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+      KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+      KONG_PROXY_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_ERROR_LOG: "/dev/stderr"
+      KONG_LOG_LEVEL: "info"
+      KONG_DECLARATIVE_CONFIG: /kong.yml
+      KONG_ADMIN_GUI_URL: http://localhost:7002
+    volumes:
+      - ./kong.yml:/kong.yml:ro
 
 volumes:
   postgres_data:

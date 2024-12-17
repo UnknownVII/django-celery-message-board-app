@@ -34,10 +34,13 @@ if ENVIRONMENT == 'development':
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', env('RENDER_EXTERNAL_HOSTNAME')]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'localhost:8445', env('RENDER_EXTERNAL_HOSTNAME')]
+SITE_URL = "https://localhost:8445"
 
-CSRF_TRUSTED_ORIGINS = [ 'https://*' ]
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://*' ,
+    'https://localhost:8445',
+]
 
 # Application definition
 
@@ -157,7 +160,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [ BASE_DIR / 'static' ]
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media' 
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -181,6 +184,13 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
+# Manually override email confirmation URLs
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"  # Ensure https
+DOMAIN = "localhost:8445"
+
+# If using Sites Framework
+ACCOUNT_EMAIL_CONFIRMATION_URL = f"https://{DOMAIN}/accounts/confirm-email/"
+
 
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True

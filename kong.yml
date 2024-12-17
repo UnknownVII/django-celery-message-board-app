@@ -1,0 +1,34 @@
+_format_version: "3.0"
+
+services:
+  - name: my-service
+    url: http://my-service-upstream # Points to the upstream name
+    routes:
+      - name: my-route
+        paths:
+          - /
+        strip_path: true
+        preserve_host: true
+
+upstreams:
+  - name: my-service-upstream
+    targets:
+      - target: my-docker-project-app-1:8000
+      - target: my-docker-project-app-2:8000
+      - target: my-docker-project-app-3:8000
+    healthchecks:
+      active:
+        type: http
+        http_path: /health
+        healthy:
+          interval: 5
+          http_statuses:
+            - 200
+          successes: 2
+        unhealthy:
+          interval: 5
+          http_statuses:
+            - 500
+          tcp_failures: 2
+          timeouts: 2
+          http_failures: 2

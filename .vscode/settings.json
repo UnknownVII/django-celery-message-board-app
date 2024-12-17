@@ -6,6 +6,7 @@
     "dateutil",
     "didyoumean",
     "dotenv",
+    "healthchecks",
     "htmx",
     "kombu",
     "makemigrations",
