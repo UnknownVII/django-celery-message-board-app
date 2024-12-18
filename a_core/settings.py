@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'a_home',
     'a_users',
     'a_messageboard',
+    'a_healthcheck',
     'django_celery_results',
     'django_celery_beat'
 ]

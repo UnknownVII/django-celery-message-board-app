@@ -9,6 +9,20 @@ services:
           - /
         strip_path: true
         preserve_host: true
+        plugins:
+          - name: rate-limiting
+            config:
+              second: 100 # Allow 100 requests per second
+              minute: 5000 # Adjust to support higher sustained load
+              hour: 100000 # Adjust for long-term sustained load
+              limit_by: ip # Limit rate by IP address
+              policy: redis # Use Redis for rate limiting
+              redis:
+                host: my-redis-container # Redis container hostname
+                port: 6379 # Redis port (default is 6379)
+                database: 0 # Redis database index (optional)
+                timeout: 2000 # Redis timeout in milliseconds
+                password: "" # Redis password if authentication is enabled (optional)
 
 upstreams:
   - name: my-service-upstream
@@ -19,7 +33,7 @@ upstreams:
     healthchecks:
       active:
         type: http
-        http_path: /health
+        http_path: /health/
         healthy:
           interval: 5
           http_statuses:
