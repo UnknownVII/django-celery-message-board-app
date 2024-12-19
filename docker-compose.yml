@@ -17,6 +17,10 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      DOMAIN: ${DOMAIN}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      REDIS_CACHE_LOCATION: ${REDIS_CACHE_LOCATION}
+      FRONTEND_URL: ${FRONTEND_URL}
     volumes:
       - .:/app
     depends_on:
@@ -39,6 +43,10 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      DOMAIN: ${DOMAIN}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      REDIS_CACHE_LOCATION: ${REDIS_CACHE_LOCATION}
+      FRONTEND_URL: ${FRONTEND_URL}
     volumes:
       - .:/subscribe-service
     depends_on:
@@ -61,6 +69,10 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      DOMAIN: ${DOMAIN}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      REDIS_CACHE_LOCATION: ${REDIS_CACHE_LOCATION}
+      FRONTEND_URL: ${FRONTEND_URL}
     volumes:
       - .:/subscribe-service
     depends_on:
@@ -81,6 +93,10 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      DOMAIN: ${DOMAIN}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      REDIS_CACHE_LOCATION: ${REDIS_CACHE_LOCATION}
+      FRONTEND_URL: ${FRONTEND_URL}
     restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -107,6 +123,10 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      DOMAIN: ${DOMAIN}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      REDIS_CACHE_LOCATION: ${REDIS_CACHE_LOCATION}
+      FRONTEND_URL: ${FRONTEND_URL}
     volumes:
       - .:/app
     depends_on:
@@ -131,6 +151,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       FLOWER_USER: ${FLOWER_USER}
       FLOWER_PASSWORD: ${FLOWER_PASSWORD}
+      DOMAIN: ${DOMAIN}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      REDIS_CACHE_LOCATION: ${REDIS_CACHE_LOCATION}
+      FRONTEND_URL: ${FRONTEND_URL}
     depends_on:
       - redis
 
@@ -151,6 +175,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       FLOWER_USER: ${FLOWER_USER}
       FLOWER_PASSWORD: ${FLOWER_PASSWORD}
+      DOMAIN: ${DOMAIN}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      REDIS_CACHE_LOCATION: ${REDIS_CACHE_LOCATION}
+      FRONTEND_URL: ${FRONTEND_URL}
     depends_on:
       - redis
       - app
