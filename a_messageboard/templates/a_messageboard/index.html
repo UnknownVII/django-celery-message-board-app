@@ -72,14 +72,16 @@
         </div>
         {% if user in messageboard.subscribers.all %}
         <a
-          href="https://localhost:7445/subscriptions/subscribe/{{ messageboard.id }}/{{ user.id }}"
+          href="#"
+          onclick="testAndNavigate(event, 'https://localhost:7445/subscriptions/subscribe/{{ messageboard.id }}/{{ user.id }}')"
           class="inline-block bg-gray-300 hover:bg-red-500 text-white font-bold rounded-full py-3 px-4"
         >
           Unsubscribe
         </a>
         {% else %}
         <a
-          href="https://localhost:7445/subscriptions/subscribe/{{ messageboard.id }}/{{ user.id }}"
+          href="#"
+          onclick="testAndNavigate(event, 'https://localhost:7445/subscriptions/subscribe/{{ messageboard.id }}/{{ user.id }}')"
           class="inline-block bg-black hover:bg-emerald-500 text-white font-bold rounded-full py-3 px-4"
         >
           Subscribe
@@ -123,6 +125,29 @@
   window.onload = function () {
     scrollToBottom();
   };
+  async function testAndNavigate(event, url) {
+    event.preventDefault();
+
+    try {
+      const response = await fetch("https://localhost:7445/health/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json", // Content-Type header for JSON requests
+        },
+      });
+
+      if (response.ok) {
+        window.location.href = url;
+      } else {
+        alert(
+          "The subscription service is currently unavailable. Please try again later."
+        );
+      }
+    } catch (error) {
+      console.error("Error checking health endpoint:", error);
+      alert("Failed to connect to the subscription service.");
+    }
+  }
 </script>
 
 {% endblock %}

@@ -3,6 +3,7 @@
     "allauth",
     "amqp",
     "asgiref",
+    "corsheaders",
     "dateutil",
     "didyoumean",
     "dotenv",

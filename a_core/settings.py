@@ -41,7 +41,26 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*' ,
     'https://localhost:8445',
 ]
+CORS_ALLOWED_ORIGINS = [
+    "https://localhost:8445",  # Allow your frontend to access the backend
+    'https://localhost:7445'
+]
 
+CORS_ALLOW_HEADERS = [
+    "Authorization",  # Include any other custom headers your frontend sends
+    "Content-Type",
+]
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "OPTIONS",
+    # Add other methods if needed
+]
+
+CORS_ORIGIN_WHITELIST = [
+    'https://localhost:7445'
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -62,13 +81,15 @@ INSTALLED_APPS = [
     'a_healthcheck',
     'a_subscriptions',
     'django_celery_results',
-    'django_celery_beat'
+    'django_celery_beat',
+    'corsheaders',
 ]
 
 SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
