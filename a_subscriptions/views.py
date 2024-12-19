@@ -5,18 +5,19 @@ import a_core
 from a_messageboard.models import MessageBoard
 from .models import Subscription
 from django.http import JsonResponse
+from django.contrib.auth.models import User
 
-@login_required
-def subscribe(request, messageboard_id):
+def subscribe(request, messageboard_id, user_id):
     messageboard = get_object_or_404(MessageBoard, id=messageboard_id)
+    user = get_object_or_404(User, id=user_id)
     
-    # Add user to the subscribers if they are not already subscribed
-    if request.user not in messageboard.subscribers.all():
-        messageboard.subscribers.add(request.user)
+    # Add or remove the user from subscribers
+    if user in messageboard.subscribers.all():
+        messageboard.subscribers.remove(user)
     else:
-        messageboard.subscribers.remove(request.user)
-
-    # Use the setting to redirect to the correct port
+        messageboard.subscribers.add(user)
+    
+    # Redirect to the frontend app
     return redirect(f'{a_core.settings.FRONTEND_URL}/messageboard')
 
 def health_check(request):
