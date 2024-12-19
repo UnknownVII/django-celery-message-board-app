@@ -6,7 +6,6 @@ from a_messageboard.models import MessageBoard
 from .models import Subscription
 from django.http import JsonResponse
 
-@login_required
 def subscribe(request, messageboard_id):
     messageboard = get_object_or_404(MessageBoard, id=messageboard_id)
     
