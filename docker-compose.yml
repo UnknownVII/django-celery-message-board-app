@@ -23,6 +23,50 @@ services:
       - postgres
       - redis
 
+  subscribe-service-1:
+    build: .
+    image: my-app-image
+    command: /app/entrypoint-service.sh
+    container_name: my-subscribe-service-container-1
+    ports:
+      - "7001:7000"
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT}
+      RENDER_EXTERNAL_HOSTNAME: ${RENDER_EXTERNAL_HOSTNAME}
+      SECRET_KEY: ${SECRET_KEY}
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - .:/subscribe-service
+    depends_on:
+      - postgres
+      - redis
+
+  subscribe-service-2:
+    build: .
+    image: my-app-image
+    command: /app/entrypoint-service.sh
+    container_name: my-subscribe-service-container-2
+    ports:
+      - "7002:7000"
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT}
+      RENDER_EXTERNAL_HOSTNAME: ${RENDER_EXTERNAL_HOSTNAME}
+      SECRET_KEY: ${SECRET_KEY}
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - .:/subscribe-service
+    depends_on:
+      - postgres
+      - redis
+
   postgres:
     image: postgres
     container_name: my-postgres-container
@@ -110,7 +154,7 @@ services:
     depends_on:
       - redis
       - app
-  
+
   kong:
     image: kong:latest
     container_name: kong
@@ -124,9 +168,24 @@ services:
       KONG_ADMIN_ERROR_LOG: "/dev/stderr"
       KONG_LOG_LEVEL: "info"
       KONG_DECLARATIVE_CONFIG: /kong.yml
-      KONG_ADMIN_GUI_URL: http://localhost:7002
     volumes:
       - ./kong.yml:/kong.yml:ro
+
+  kong-2:
+    image: kong:latest
+    container_name: kong-2
+    ports:
+      - "7445:8443" # Public API traffic (SSL)
+    environment:
+      KONG_DATABASE: "off"
+      KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+      KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+      KONG_PROXY_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_ERROR_LOG: "/dev/stderr"
+      KONG_LOG_LEVEL: "info"
+      KONG_DECLARATIVE_CONFIG: /kong-2.yml
+    volumes:
+      - ./kong-2.yml:/kong-2.yml:ro
 
 volumes:
   postgres_data:

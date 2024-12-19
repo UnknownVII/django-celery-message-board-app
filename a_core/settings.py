@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'a_users',
     'a_messageboard',
     'a_healthcheck',
+    'a_subscriptions',
     'django_celery_results',
     'django_celery_beat'
 ]
@@ -219,3 +220,4 @@ SESSION_COOKIE_NAME = "sessionid"  # Default cookie name
 SESSION_COOKIE_SECURE = True  # Set to True for HTTPS
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"  # Adjust as needed
+FRONTEND_URL = 'https://localhost:8445'

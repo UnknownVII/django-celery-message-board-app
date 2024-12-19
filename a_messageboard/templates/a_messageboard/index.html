@@ -72,16 +72,18 @@
         </div>
         {% if user in messageboard.subscribers.all %}
         <a
-          href="{% url 'subscribe' %}"
+          href="https://localhost:7445/subscriptions/subscribe/{{ messageboard.id }}"
           class="inline-block bg-gray-300 hover:bg-red-500 text-white font-bold rounded-full py-3 px-4"
-          >Unsubscribe</a
         >
+          Unsubscribe
+        </a>
         {% else %}
         <a
-          href="{% url 'subscribe' %}"
+          href="https://localhost:7445/subscriptions/subscribe/{{ messageboard.id }}"
           class="inline-block bg-black hover:bg-emerald-500 text-white font-bold rounded-full py-3 px-4"
-          >Subscribe</a
         >
+          Subscribe
+        </a>
         {% endif %}
       </div>
 

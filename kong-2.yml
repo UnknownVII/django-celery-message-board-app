@@ -1,0 +1,65 @@
+_format_version: "3.0"
+
+services:
+  - name: subscribe-service
+    url: http://subscribe-service-upstream
+    routes:
+      - name: subscribe-health-route
+        paths:
+          - /subscriptions/health/
+        strip_path: true
+        preserve_host: true
+        plugins:
+          - name: rate-limiting
+            config:
+              second: 100
+              minute: 5000
+              hour: 100000
+              limit_by: ip
+              policy: redis
+              redis:
+                host: my-redis-container
+                port: 6379
+                database: 0
+                timeout: 2000
+                password: ""
+      - name: subscribe-route
+        paths:
+          - /
+        strip_path: true
+        preserve_host: true
+        plugins:
+          - name: rate-limiting
+            config:
+              second: 100
+              minute: 5000
+              hour: 100000
+              limit_by: ip
+              policy: redis
+              redis:
+                host: my-redis-container
+                port: 6379
+                database: 0
+                timeout: 2000
+                password: ""
+
+upstreams:
+  - name: subscribe-service-upstream
+    targets:
+      - target: my-subscribe-service-container-1:7000
+      - target: my-subscribe-service-container-2:7000
+    healthchecks:
+      active:
+        http_path: /subscriptions/health/
+        healthy:
+          interval: 5
+          http_statuses:
+            - 200
+          successes: 2
+        unhealthy:
+          interval: 5
+          http_statuses:
+            - 500
+          tcp_failures: 2
+          timeouts: 2
+          http_failures: 2

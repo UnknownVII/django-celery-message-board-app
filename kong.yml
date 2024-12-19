@@ -1,8 +1,8 @@
 _format_version: "3.0"
 
 services:
-  - name: my-service
-    url: http://my-service-upstream # Points to the upstream name
+  - name: app-service
+    url: http://app-service-upstream # Points to the upstream name
     routes:
       - name: my-route
         paths:
@@ -25,7 +25,7 @@ services:
                 password: "" # Redis password if authentication is enabled (optional)
 
 upstreams:
-  - name: my-service-upstream
+  - name: app-service-upstream
     targets:
       - target: my-docker-project-app-1:8000
       - target: my-docker-project-app-2:8000
