@@ -38,7 +38,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'localhost:8445', env('RENDER_EXTERNA
 SITE_URL = "https://localhost:8445"
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://*' ,
+    env('FRONTEND_URL'),
     'https://localhost:8445',
 ]
 
@@ -114,7 +114,7 @@ DATABASES = {
         'NAME': env('POSTGRES_DB'),
         'USER': env('POSTGRES_USER'),
         'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': 'postgres',
+        'HOST': env('POSTGRES_HOST'),
         'PORT': 5432,
     }
 }

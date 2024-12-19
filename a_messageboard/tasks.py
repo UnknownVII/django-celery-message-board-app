@@ -30,11 +30,11 @@ def send_newsletter():
         for subscriber in subscribers:
               body = render_to_string('a_messageboard/newsletter.html', {
                     'name': subscriber.profile.name,
-                    'link1': 'http://127.0.0.1:8000/messageboard',
-                    'link2': 'http://127.0.0.1:8000/messageboard',
+                    'link1': 'https://3.104.175.231:8445/messageboard',
+                    'link2': 'https://3.104.175.231:8445/messageboard',
                     'webinar_date': 'December 15th, 2024',
-                    'message_board_link': 'http://127.0.0.1:8000/messageboard',
-                    'unsubscribe_link': f'http://127.0.0.1:8000/profile/settings'
+                    'message_board_link': 'https://3.104.175.231:8445/messageboard',
+                    'unsubscribe_link': f'https://3.104.175.231:8445/profile/settings'
                 }
             )
               email = EmailMessage(subject, body, to=[subscriber.email])
