@@ -72,14 +72,14 @@
         </div>
         {% if user in messageboard.subscribers.all %}
         <a
-          href="https://54.79.115.252:7445/subscriptions/subscribe/{{ messageboard.id }}"
+          href="https://54.79.115.252:7445/subscriptions/subscribe/{{ messageboard.id }}/{{ user.id }}"
           class="inline-block bg-gray-300 hover:bg-red-500 text-white font-bold rounded-full py-3 px-4"
         >
           Unsubscribe
         </a>
         {% else %}
         <a
-          href="https://54.79.115.252:7445/subscriptions/subscribe/{{ messageboard.id }}"
+          href="https://54.79.115.252:7445/subscriptions/subscribe/{{ messageboard.id }}/{{ user.id }}"
           class="inline-block bg-black hover:bg-emerald-500 text-white font-bold rounded-full py-3 px-4"
         >
           Subscribe

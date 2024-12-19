@@ -32,7 +32,7 @@ urlpatterns = [
     path('health/', include('a_healthcheck.urls')),
     path('subscriptions/', include('a_subscriptions.urls')),
     path('subscriptions/', include(('a_subscriptions.urls', 'subscriptions'), namespace='subscriptions')),
-    path('subscriptions/subscribe/<int:messageboard_id>/', subscribe, name='subscribe'),
+    path('subscriptions/subscribe/<int:messageboard_id>/<int:user_id>/', subscribe, name='subscribe'),
 ]
 
 # Only used when DEBUG=True, whitenoise can serve files when DEBUG=False
