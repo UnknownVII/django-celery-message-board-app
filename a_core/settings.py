@@ -188,13 +188,13 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 # Manually override email confirmation URLs
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"  # Ensure https
-DOMAIN = "localhost:8445"
+DOMAIN = env('DOMAIN')
 
 # If using Sites Framework
 ACCOUNT_EMAIL_CONFIRMATION_URL = f"https://{DOMAIN}/accounts/confirm-email/"
 
 
-CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_RESULT_BACKEND =  'django-db'
 CELERY_RESULT_EXTENDED = True
@@ -207,7 +207,7 @@ SESSION_CACHE_ALIAS = "default"
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://my-redis-container:6379/1",
+        "LOCATION": env('REDIS_CACHE_LOCATION'),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -220,4 +220,4 @@ SESSION_COOKIE_NAME = "sessionid"  # Default cookie name
 SESSION_COOKIE_SECURE = True  # Set to True for HTTPS
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"  # Adjust as needed
-FRONTEND_URL = 'https://localhost:8445'
+FRONTEND_URL = env('FRONTEND_URL')
