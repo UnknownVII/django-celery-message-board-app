@@ -33,7 +33,6 @@ def messageboard_view(request):
     return render(request, 'a_messageboard/index.html', context)
 
 
-@login_required
 def subscribe(request):
     messageboard = get_object_or_404(MessageBoard, id=1)
     
